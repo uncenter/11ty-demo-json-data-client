@@ -32,7 +32,7 @@ layout: base.njk
         const li = document.createElement("li");
         li.setAttribute("data-id", video.id);
         li.setAttribute("data-title", video.title);
-        li.innerHTML = `${video.title}<button class="remove-from-favorites">Remove from favorites</button>`;
+        li.innerHTML = `<a href="/videos/${video.id}/">${video.title}</a><button class="remove-from-favorites">Remove from favorites</button>`;
         favoriteVideosContainer.append(li);
     }
 
@@ -41,15 +41,14 @@ layout: base.njk
         const li = document.createElement("li");
         li.setAttribute("data-id", video.id);
         li.setAttribute("data-title", video.title);
-        li.innerHTML = `${video.title}${button ? `<button class="add-to-favorites">Add to favorites</button>` : ''}`;
+        li.innerHTML = `<a href="/videos/${video.id}/">${video.title}</a>${button ? `<button class="add-to-favorites">Add to favorites</button>` : ''}`;
         allVideosContainer.append(li);
     }
 
     // Helper function to just add an "Add to favorites" button to a video in allVideosContainer.
     function addAddToFavoritesButton(videoId) {
-        const video = allVideosContainer.querySelector(`li[data-id="${videoId}"]`);
-        console.log('addAddToFavoritesButtons', {videoId, favoriteVideos})
-        video.innerHTML = `${video.textContent}<button class="add-to-favorites">Add to favorites</button>`;
+        const li = allVideosContainer.querySelector(`li[data-id="${videoId}"]`);
+        li.innerHTML = `<a href="/videos/${videoId}/">${li.getAttribute("data-title")}</a><button class="add-to-favorites">Add to favorites</button>`;
     }
 
     // Let's initialize by adding the videos to their containers.
