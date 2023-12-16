@@ -1,0 +1,9 @@
+---
+layout: base.njk
+---
+
+<ul>
+{% for video in videos %}
+<li id="{{ video.id }}">{{ video.title }}</li>
+{% endfor %}
+</ul>
