@@ -1,6 +1,14 @@
 [
 	{
 		"id": "1",
-		"title": "Hello, World!"
+		"title": "My first video"
+	},
+	{
+		"id": "2",
+		"title": "Another video"
+	},
+	{
+		"id": "3",
+		"title": "My very last video"
 	}
 ]
