@@ -2,13 +2,74 @@
 layout: base.njk
 ---
 
-<ul>
-{% for video in videos %}
-<li id="{{ video.id }}">{{ video.title }}</li>
-{% endfor %}
+<h2>All videos</h2>
+
+<ul class="all-videos">
 </ul>
+
+<h2>Favorite videos</h2>
+
+<ul class="favorite-videos">
+</ul>
+
 
 <script>
     const videos = {{ videos | dump | safe }};
-    console.log(videos);
+    let favoriteVideos = JSON.parse(localStorage.getItem("favoriteVideos") || "[]");
+    const favoriteVideosContainer = document.querySelector(".favorite-videos");
+    const allVideosContainer = document.querySelector(".all-videos");
+
+    function saveFavoriteVideos() {
+        localStorage.setItem("favoriteVideos", JSON.stringify(favoriteVideos));
+    }
+
+    function addFavoriteVideo(video) {
+        const li = document.createElement("li");
+        li.setAttribute("data-id", video.id);
+        li.setAttribute("data-title", video.title);
+        li.innerHTML = `${video.title}<button class="remove-from-favorites">Remove from favorites</button>`;
+        favoriteVideosContainer.append(li);
+    }
+
+    function addAllVideo(video) {
+        const li = document.createElement("li");
+        li.setAttribute("data-id", video.id);
+        li.setAttribute("data-title", video.title);
+        li.innerHTML = `${video.title}<button class="add-to-favorites">Add to favorites</button>`;
+        allVideosContainer.append(li);
+    }
+
+    function updateAllVideoButton(videoId) {
+        const video = allVideosContainer.querySelector(`li[data-id="${videoId}"]`);
+        console.log('updateAllVideoButtons', {videoId, favoriteVideos})
+        video.innerHTML = `${video.textContent}<button class="add-to-favorites">Add to favorites</button>`;
+    }
+
+    for (const video of videos) {
+        if (!favoriteVideos.includes(video.id)) {
+            addAllVideo(video);
+        } else {
+            addFavoriteVideo(video);
+        }
+    }
+
+    document.addEventListener("click", (event) => {
+        const target = event.target;
+        
+        if (target.classList.contains("add-to-favorites")) {
+            const videoTitle = target.parentElement.getAttribute("data-title");
+            const videoId = target.parentElement.getAttribute("data-id");
+            favoriteVideos.push(videoId);
+            saveFavoriteVideos();
+            target.remove();
+            addFavoriteVideo({ id: videoId, title: videoTitle });
+        } else if (target.classList.contains("remove-from-favorites")) {
+            const videoTitle = target.parentElement.getAttribute("data-title");
+            const videoId = target.parentElement.getAttribute("data-id");
+            favoriteVideos = favoriteVideos.filter((id) => id !== videoId);
+            target.parentElement.remove();
+            updateAllVideoButton(videoId);
+            saveFavoriteVideos();
+        }
+    });
 </script>
