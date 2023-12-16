@@ -2,19 +2,21 @@
 layout: base.njk
 ---
 
-<h2>All videos</h2>
+<section>
+    <h2>All videos</h2>
 
-<ul class="all-videos">
-</ul>
+    <ul class="all-videos"></ul>
+</section>
 
-<h2>Favorite videos</h2>
-
-<ul class="favorite-videos">
-</ul>
+<section>
+    <h2>Favorite videos</h2>
+    
+    <ul class="favorite-videos"></ul>
+</section>
 
 
 <script>
-    // Our static videos.
+    // Our static videos data from _data/videos.json.
     const videos = {{ videos | dump | safe }};
     // Get the user's favorite videos from local storage, or just use an empty array.
     let favoriteVideos = JSON.parse(localStorage.getItem("favoriteVideos") || "[]");
