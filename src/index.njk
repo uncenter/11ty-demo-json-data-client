@@ -45,7 +45,7 @@ layout: base.njk
         allVideosContainer.append(li);
     }
 
-    // Helper function to just update add an "Add to favorites" button to a video in allVideosContainer.
+    // Helper function to just add an "Add to favorites" button to a video in allVideosContainer.
     function addAddToFavoritesButton(videoId) {
         const video = allVideosContainer.querySelector(`li[data-id="${videoId}"]`);
         console.log('addAddToFavoritesButtons', {videoId, favoriteVideos})
@@ -65,11 +65,11 @@ layout: base.njk
         }
     }
 
-    // Listen for an clicks.
+    // Listen for clicks.
     document.addEventListener("click", (event) => {
         const target = event.target;
         
-        // If this is one of our add to favorites buttons:
+        // If this is a "add to favorites" button click:
         if (target.classList.contains("add-to-favorites")) {
             // Get the video data.
             const videoTitle = target.parentElement.getAttribute("data-title");
@@ -82,7 +82,7 @@ layout: base.njk
             target.remove();
             // And add a new li element for this favorite to the favoriteVideosContainer.
             addFavoriteVideo({ id: videoId, title: videoTitle });
-        } else if (target.classList.contains("remove-from-favorites")) { // If this is a remove from favorites button:
+        } else if (target.classList.contains("remove-from-favorites")) { // If this is a "remove from favorites" button click:
             // Get the video data.
             const videoTitle = target.parentElement.getAttribute("data-title");
             const videoId = target.parentElement.getAttribute("data-id");
