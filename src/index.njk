@@ -31,11 +31,11 @@ layout: base.njk
         favoriteVideosContainer.append(li);
     }
 
-    function addAllVideo(video) {
+    function addAllVideo(video, button = true) {
         const li = document.createElement("li");
         li.setAttribute("data-id", video.id);
         li.setAttribute("data-title", video.title);
-        li.innerHTML = `${video.title}<button class="add-to-favorites">Add to favorites</button>`;
+        li.innerHTML = `${video.title}${button ? `<button class="add-to-favorites">Add to favorites</button>` : ''}`;
         allVideosContainer.append(li);
     }
 
@@ -46,10 +46,11 @@ layout: base.njk
     }
 
     for (const video of videos) {
-        if (!favoriteVideos.includes(video.id)) {
-            addAllVideo(video);
-        } else {
+        if (favoriteVideos.includes(video.id)) {
+            addAllVideo(video, false);
             addFavoriteVideo(video);
+        } else {
+            addAllVideo(video);
         }
     }
 
