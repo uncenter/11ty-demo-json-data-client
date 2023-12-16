@@ -14,15 +14,20 @@ layout: base.njk
 
 
 <script>
+    // Our static videos.
     const videos = {{ videos | dump | safe }};
+    // Get the user's favorite videos from local storage, or just use an empty array.
     let favoriteVideos = JSON.parse(localStorage.getItem("favoriteVideos") || "[]");
+    // Setup our containers.
     const favoriteVideosContainer = document.querySelector(".favorite-videos");
     const allVideosContainer = document.querySelector(".all-videos");
 
+    // Helper function to save the user's favoriteVideos to localStorage.
     function saveFavoriteVideos() {
         localStorage.setItem("favoriteVideos", JSON.stringify(favoriteVideos));
     }
 
+    // Helper function to add a new li element (for a new favorite video) to the favoriteVideosContainer.
     function addFavoriteVideo(video) {
         const li = document.createElement("li");
         li.setAttribute("data-id", video.id);
@@ -31,6 +36,7 @@ layout: base.njk
         favoriteVideosContainer.append(li);
     }
 
+    // Helper function to add a new li element to the allVideosContainer.
     function addAllVideo(video, button = true) {
         const li = document.createElement("li");
         li.setAttribute("data-id", video.id);
@@ -39,38 +45,55 @@ layout: base.njk
         allVideosContainer.append(li);
     }
 
-    function updateAllVideoButton(videoId) {
+    // Helper function to just update add an "Add to favorites" button to a video in allVideosContainer.
+    function addAddToFavoritesButton(videoId) {
         const video = allVideosContainer.querySelector(`li[data-id="${videoId}"]`);
-        console.log('updateAllVideoButtons', {videoId, favoriteVideos})
+        console.log('addAddToFavoritesButtons', {videoId, favoriteVideos})
         video.innerHTML = `${video.textContent}<button class="add-to-favorites">Add to favorites</button>`;
     }
 
+    // Let's initialize by adding the videos to their containers.
     for (const video of videos) {
         if (favoriteVideos.includes(video.id)) {
+            // This is a favorite video, so add it to the allVideosContainer but don't add a button.
             addAllVideo(video, false);
+            // Add it to the favoriteVideosContainer as well.
             addFavoriteVideo(video);
         } else {
+            // Not a favorite video, so just to the allVideosContainer it goes.
             addAllVideo(video);
         }
     }
 
+    // Listen for an clicks.
     document.addEventListener("click", (event) => {
         const target = event.target;
         
+        // If this is one of our add to favorites buttons:
         if (target.classList.contains("add-to-favorites")) {
+            // Get the video data.
             const videoTitle = target.parentElement.getAttribute("data-title");
             const videoId = target.parentElement.getAttribute("data-id");
+            // Add it to favorites.
             favoriteVideos.push(videoId);
+            // Save the favorites in localStorage.
             saveFavoriteVideos();
+            // And remove the add to favorites button.
             target.remove();
+            // And add a new li element for this favorite to the favoriteVideosContainer.
             addFavoriteVideo({ id: videoId, title: videoTitle });
-        } else if (target.classList.contains("remove-from-favorites")) {
+        } else if (target.classList.contains("remove-from-favorites")) { // If this is a remove from favorites button:
+            // Get the video data.
             const videoTitle = target.parentElement.getAttribute("data-title");
             const videoId = target.parentElement.getAttribute("data-id");
+            // Set favorites to every video except this one (remove it).
             favoriteVideos = favoriteVideos.filter((id) => id !== videoId);
-            target.parentElement.remove();
-            updateAllVideoButton(videoId);
+                // Save the updated favorites to localStorage.
             saveFavoriteVideos();
+            // Remove the parent element of this button (the li element) from favoriteVideosContainer.
+            target.parentElement.remove();
+            // Add an add to favorites button to this video's li in the allVideosContainer.
+            addAddToFavoritesButton(videoId);
         }
     });
 </script>
