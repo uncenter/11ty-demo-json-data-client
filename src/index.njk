@@ -7,3 +7,8 @@ layout: base.njk
 <li id="{{ video.id }}">{{ video.title }}</li>
 {% endfor %}
 </ul>
+
+<script>
+    const videos = {{ videos | dump | safe }};
+    console.log(videos);
+</script>
